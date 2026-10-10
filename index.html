@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>360 Super Food - Millet Based Products</title>
+<meta name="description" content="Order millet rava, idli mixes, noodles, flours and more from 360 Super Food, Hyderabad.">
+<style>
+:root{--y:#FFD400;--yd:#E6BE00;--g:#1f5d3a;--ink:#1d1d1b;--mut:#6b6b63;--bg:#fffbea;--card:#fff;--line:#eee4b8}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);background:var(--bg)}
+header{position:sticky;top:0;z-index:20;background:var(--y);box-shadow:0 1px 0 rgba(0,0,0,.1)}
+.bar{max-width:1100px;margin:auto;display:flex;gap:10px;align-items:center;padding:10px 14px;flex-wrap:wrap}
+.logo{font-weight:900;font-size:20px;line-height:1;letter-spacing:-.5px}.logo img{height:52px;width:auto;display:block;background:#fff;border-radius:10px;padding:2px}.logo small{display:block;font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase}
+.search{flex:1;min-width:150px;padding:10px 12px;border:2px solid #fff0;border-radius:8px;font-size:15px;background:#fff}
+button{font:inherit;cursor:pointer}.btn{background:var(--g);color:#fff;border:0;border-radius:8px;padding:10px 14px;font-weight:700}.btn.alt{background:#fff;color:var(--ink);border:1px solid #0002}
+.btn:disabled{opacity:.5}.cartbtn{position:relative}.badge{background:#c62828;color:#fff;border-radius:99px;font-size:11px;padding:1px 6px;margin-left:4px}
+.hero{max-width:1100px;margin:auto;padding:18px 14px 4px}.hero h1{margin:0;font-size:24px}.hero p{margin:4px 0 0;color:var(--mut)}
+.chips{max-width:1100px;margin:auto;padding:10px 14px;display:flex;gap:8px;overflow-x:auto}
+.chip{white-space:nowrap;background:#fff;border:1px solid var(--line);border-radius:99px;padding:7px 14px;font-size:14px}.chip.on{background:var(--g);color:#fff;border-color:var(--g)}
+main{max-width:1100px;margin:auto;padding:0 14px 90px}
+h2.cat{margin:22px 0 10px;font-size:18px;border-left:5px solid var(--y);padding-left:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.ph{height:84px;border-radius:8px;background:linear-gradient(135deg,#fff3a6,#ffd400);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:28px;color:#1f5d3a99}
+.nm{font-weight:650;font-size:15px;min-height:38px}.tag{font-size:12px;color:var(--mut)}
+.row{display:flex;gap:6px;align-items:center;margin-top:auto}
+.qty{display:flex;align-items:center;border:1px solid var(--line);border-radius:8px;overflow:hidden}.qty button{border:0;background:#fff7c2;width:30px;height:34px;font-size:18px}.qty span{min-width:30px;text-align:center}
+.add{flex:1;background:var(--y);border:0;border-radius:8px;padding:9px;font-weight:700}.add:hover{background:var(--yd)}
+.drawer{position:fixed;inset:0;background:#0006;z-index:30;display:none}.drawer.on{display:block}
+.panel{position:absolute;right:0;top:0;bottom:0;width:min(440px,100%);background:#fff;overflow:auto;padding:16px}
+.panel h3{margin:0 0 10px}.line{display:flex;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}.line .n{flex:1;font-size:14px}
+label{display:block;font-size:13px;color:var(--mut);margin:10px 0 3px}input,textarea{width:100%;padding:10px;border:1px solid #cfc79a;border-radius:8px;font:inherit}
+.note{font-size:12px;color:var(--mut);margin-top:8px}.err{color:#c62828;font-size:14px;margin-top:8px}
+.ok{background:#e8f5e9;border:1px solid #a5d6a7;border-radius:10px;padding:14px;margin-top:10px}
+.tbl{width:100%;border-collapse:collapse;font-size:13px}.tbl td,.tbl th{border-bottom:1px solid var(--line);padding:6px;text-align:left;vertical-align:top}
+.who{font-size:13px}footer{max-width:1100px;margin:30px auto;padding:0 14px;color:var(--mut);font-size:13px}
+select{padding:6px;border-radius:6px}
+</style></head><body>
+<header><div class="bar">
+ <div class="logo"><img id="logoimg" alt="360 Super Food - aarogyam dhan sampada"></div>
+ <input id="q" class="search" placeholder="Search millets, rava, idli mix..." type="search">
+ <span id="who" class="who"></span>
+ <button class="btn alt" id="signBtn">Sign in</button>
+ <button class="btn alt" id="ordersBtn" style="display:none">My orders</button>
+ <button class="btn alt" id="adminBtn" style="display:none">Admin</button>
+ <button class="btn cartbtn" id="cartBtn">Cart<span class="badge" id="cnt">0</span></button>
+</div></header>
+<div class="hero"><h1>Millet based products, straight from our kitchen</h1><p>Gluten free, no preservatives, no chemicals. Pick what you need, place your order, and we will call you to confirm.</p></div>
+<div class="chips" id="chips"></div>
+<main id="main"></main>
+<footer>360 Super Food Products Company, Sy.No 578, 579, IDA Uppal, Hyderabad 500039 &middot; Customer care <a id="care"></a> &middot; Private labeling, bulk booking (industries and hotels) and vacuum packing available.</footer>
+
+<div class="drawer" id="drawer"><div class="panel" id="panel"></div></div>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="logo.js"></script><script src="config.js"></script><script src="products.js"></script>
+<script>
+document.getElementById('logoimg').src=window.SF_LOGO;
+const C=window.SF_CONFIG, CATS=window.SF_CATEGORIES;
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let cart=JSON.parse(localStorage.getItem('sf_cart')||'{}'), token=null, user=null, isAdmin=false, filter='all', draft={}, grid={};
+$('#care').textContent=C.careNumber;$('#care').href='tel:'+C.careNumber;
+function saveCart(){localStorage.setItem('sf_cart',JSON.stringify(cart));$('#cnt').textContent=Object.values(cart).reduce((a,b)=>a+b,0)}
+function render(){
+  const q=$('#q').value.trim().toLowerCase();
+  $('#chips').innerHTML=[{id:'all',name:'All'}].concat(CATS).map(c=>`<button class="chip ${filter===c.id?'on':''}" data-c="${c.id}">${esc(c.name)}</button>`).join('');
+  let h='';
+  CATS.forEach(c=>{ if(filter!=='all'&&filter!==c.id)return;
+    const its=c.items.filter(i=>!q||(i+' '+c.name).toLowerCase().includes(q)); if(!its.length)return;
+    h+=`<h2 class="cat">${esc(c.name)}</h2><div class="grid">`+its.map(i=>{const k=i;return `<div class="card"><div class="ph">${esc(i.split(' ').map(w=>w[0]).slice(0,2).join(''))}</div><div class="nm">${esc(i)}</div><div class="tag">${esc(c.name)}</div>
+     <div class="row"><div class="qty"><button data-m="${esc(k)}">-</button><span data-q="${esc(k)}">${draft[k]||1}</span><button data-p="${esc(k)}">+</button></div><button class="add" data-a="${esc(k)}">${cart[k]?'Add more':'Add to cart'}</button></div></div>`}).join('')+'</div>';});
+  $('#main').innerHTML=h||'<p>No products match your search.</p>';
+}
+document.addEventListener('click',e=>{const t=e.target;
+  if(t.dataset.c){filter=t.dataset.c;render()}
+  if(t.dataset.p){draft[t.dataset.p]=Math.min(99,(draft[t.dataset.p]||1)+1);render_q(t.dataset.p)}
+  if(t.dataset.m){draft[t.dataset.m]=Math.max(1,(draft[t.dataset.m]||1)-1);render_q(t.dataset.m)}
+  if(t.dataset.a){const k=t.dataset.a;cart[k]=(cart[k]||0)+(draft[k]||1);draft[k]=1;saveCart();render();t.textContent='Added'}
+});
+function render_q(k){document.querySelectorAll('[data-q]').forEach(s=>{if(s.dataset.q===k)s.textContent=draft[k]})}
+$('#q').addEventListener('input',render);
+function open_(h){$('#panel').innerHTML=h;$('#drawer').classList.add('on')}
+function close_(){$('#drawer').classList.remove('on')}
+$('#drawer').addEventListener('click',e=>{if(e.target.id==='drawer'||e.target.dataset.close)close_()});
+$('#cartBtn').onclick=cartView;
+function cartView(){
+  const ks=Object.keys(cart);
+  let h='<h3>Your cart</h3>';
+  if(!ks.length)h+='<p>Your cart is empty.</p>';
+  else{
+    h+=ks.map(k=>`<div class="line"><div class="n">${esc(k)}</div><div class="qty"><button data-cm="${esc(k)}">-</button><span>${cart[k]}</span><button data-cp="${esc(k)}">+</button></div></div>`).join('');
+    h+='<p class="note">Prices are not shown online. We confirm the price and delivery with you after you place the order. No payment now.</p>';
+    h+= user? checkoutForm() : '<p>Please sign in with Google to place your order.</p><div id="gbtn"></div>';
+  }
+  h+='<p><button class="btn alt" data-close="1">Keep shopping</button></p>';
+  open_(h); if(!user&&ks.length)drawG('#gbtn');
+}
+document.addEventListener('click',e=>{const t=e.target;
+ if(t.dataset.cp){cart[t.dataset.cp]++;saveCart();cartView()}
+ if(t.dataset.cm){cart[t.dataset.cm]--;if(cart[t.dataset.cm]<=0)delete cart[t.dataset.cm];saveCart();cartView()}});
+function checkoutForm(){const p=JSON.parse(localStorage.getItem('sf_contact')||'{}');
+ return `<hr><div class="who">Signed in as ${esc(user.email)}</div>
+ <label>Full name</label><input id="f_name" value="${esc(p.name||user.name||'')}">
+ <label>Phone number (we will call or WhatsApp to confirm)</label><input id="f_phone" inputmode="tel" value="${esc(p.phone||'')}" placeholder="10-digit mobile number">
+ <label>Delivery address</label><textarea id="f_addr" rows="3">${esc(p.address||'')}</textarea>
+ <label>City</label><input id="f_city" value="${esc(p.city||'')}"><label>Pincode</label><input id="f_pin" inputmode="numeric" value="${esc(p.pincode||'')}">
+ <label>Anything else? (pack sizes, bulk quantity, delivery time)</label><textarea id="f_notes" rows="2"></textarea>
+ <div id="ferr" class="err"></div><p><button class="btn" id="place">Place order</button></p>`}
+document.addEventListener('click',async e=>{ if(e.target.id!=='place')return;
+ const c={name:$('#f_name').value,phone:$('#f_phone').value,address:$('#f_addr').value,city:$('#f_city').value,pincode:$('#f_pin').value};
+ if(!c.name.trim()||c.phone.replace(/\D/g,'').length<10||!c.address.trim()){$('#ferr').textContent='Please fill your name, a 10-digit phone number and the delivery address.';return}
+ e.target.disabled=true;e.target.textContent='Placing...';
+ try{const r=await api({action:'order',contact:c,notes:$('#f_notes').value,items:Object.keys(cart).map(k=>({name:k,qty:cart[k]}))});
+  localStorage.setItem('sf_contact',JSON.stringify(c));
+  const lines=Object.keys(cart).map(k=>k+' x '+cart[k]).join('%0A');
+  const wa=`https://wa.me/${C.whatsapp}?text=`+encodeURIComponent(`Hi, I placed order ${r.orderId} on the 360 Super Food website.\n\n`+Object.keys(cart).map(k=>k+' x '+cart[k]).join('\n')+`\n\nName: ${c.name}\nPhone: ${c.phone}`);
+  cart={};saveCart();render();
+  open_(`<div class="ok"><h3>Order placed</h3><p>Your order number is <b>${esc(r.orderId)}</b>. We will call or WhatsApp you on ${esc(c.phone)} to confirm the price and delivery. A copy was sent to ${esc(user.email)}.</p></div><p><a class="btn" style="display:inline-block;text-decoration:none" href="${wa}" target="_blank" rel="noopener">Also message us on WhatsApp</a> <button class="btn alt" data-close="1">Done</button></p>`);
+ }catch(err){$('#ferr').textContent=err.message;e.target.disabled=false;e.target.textContent='Place order'}});
+async function api(body){
+  if(C.api.startsWith('PASTE'))throw new Error('Ordering is not switched on yet.');
+  const r=await fetch(C.api,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(Object.assign({token},body))});
+  const j=await r.json(); if(!j.ok)throw new Error(j.error||'Something went wrong'); return j}
+function parseJwt(t){return JSON.parse(decodeURIComponent(escape(atob(t.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')))))}
+function onCred(resp){token=resp.credential;const p=parseJwt(token);user={email:p.email,name:p.name||''};
+ sessionStorage.setItem('sf_tok',token);after()}
+async function after(){
+ $('#who').textContent=user.name||user.email;$('#signBtn').style.display='none';$('#ordersBtn').style.display='';
+ try{const w=await api({action:'whoami'});isAdmin=w.admin;$('#adminBtn').style.display=isAdmin?'':'none'}catch(e){}
+ if($('#drawer').classList.contains('on')&&Object.keys(cart).length)cartView()}
+function drawG(sel){const go=()=>{if(!window.google||!google.accounts){return setTimeout(go,200)}
+  google.accounts.id.initialize({client_id:C.clientId,callback:onCred});google.accounts.id.renderButton($(sel),{theme:'filled_blue',size:'large',text:'signin_with'})};go()}
+(function restore(){const t=sessionStorage.getItem('sf_tok');if(!t)return;try{const p=parseJwt(t);if(p.exp*1000>Date.now()){token=t;user={email:p.email,name:p.name||''};after()}}catch(e){}})();
+$('#signBtn').onclick=()=>{open_('<h3>Sign in</h3><p>Sign in with Google to place and track orders.</p><div id="gbtn"></div><p><button class="btn alt" data-close="1">Close</button></p>');drawG('#gbtn')};
+$('#ordersBtn').onclick=async()=>{open_('<h3>My orders</h3><p>Loading...</p>');try{const r=await api({action:'mine'});
+ open_('<h3>My orders</h3>'+(r.orders.length?r.orders.map(o=>`<div class="line" style="display:block"><b>${esc(o.id)}</b> &middot; ${esc(o.status)}<div class="tag">${esc(String(o.at).slice(0,10))}</div><div style="white-space:pre-line;font-size:13px">${esc(o.items)}</div></div>`).join(''):'<p>No orders yet.</p>')+'<p><button class="btn alt" data-close="1">Close</button></p>')}catch(e){open_('<p class="err">'+esc(e.message)+'</p>')}};
+$('#adminBtn').onclick=async()=>{open_('<h3>Orders</h3><p>Loading...</p>');try{const r=await api({action:'list'});
+ window._orders=r.orders;
+ open_('<h3>All orders</h3>'+(r.orders.length?'<table class="tbl">'+r.orders.map((o,i)=>`<tr><td><b>${esc(o.id)}</b><br>${esc(String(o.at).slice(0,16).replace('T',' '))}<br><select data-st="${i}">${['New','Confirmed','Packed','Dispatched','Delivered','Cancelled'].map(s=>`<option ${s===o.status?'selected':''}>${s}</option>`).join('')}</select></td><td>${esc(o.name)}<br><a href="tel:${esc(o.phone)}">${esc(o.phone)}</a><br>${esc(o.address)}, ${esc(o.city)} ${esc(o.pincode)}</td><td style="white-space:pre-line">${esc(o.items)}${o.notes?'\n\nNote: '+esc(o.notes):''}</td></tr>`).join('')+'</table>':'<p>No orders yet.</p>')+'<p><button class="btn alt" data-close="1">Close</button></p>')}catch(e){open_('<p class="err">'+esc(e.message)+'</p>')}};
+document.addEventListener('change',async e=>{if(e.target.dataset.st===undefined)return;const o=window._orders[e.target.dataset.st];
+ try{await api({action:'setStatus',row:o.row,id:o.id,status:e.target.value})}catch(x){alert(x.message)}});
+saveCart();render();
+if(!user){/* sign-in button shows in the cart */}
+</script></body></html>
