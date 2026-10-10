@@ -22,8 +22,8 @@ h2.cat{margin:22px 0 10px;font-size:18px;border-left:5px solid var(--y);padding-
 .ph{height:84px;border-radius:8px;background:linear-gradient(135deg,#fff3a6,#ffd400);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:28px;color:#1f5d3a99}
 .nm{font-weight:650;font-size:15px;min-height:38px}.tag{font-size:12px;color:var(--mut)}
 .row{display:flex;gap:6px;align-items:center;margin-top:auto}
-.qty{display:flex;align-items:center;border:1px solid var(--line);border-radius:8px;overflow:hidden}.qty button{border:0;background:#fff7c2;width:30px;height:34px;font-size:18px}.qty span{min-width:30px;text-align:center}
-.add{flex:1;background:var(--y);border:0;border-radius:8px;padding:9px;font-weight:700}.add:hover{background:var(--yd)}
+.qty{display:flex;flex:1;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:8px;overflow:hidden}.qty button{border:0;background:#fff7c2;width:36px;height:38px;font-size:18px;font-weight:700}.qty span{min-width:36px;text-align:center;font-weight:700}.qty.empty{border:0}.qty.empty button{width:100%;height:38px;border:1px solid var(--line);border-radius:8px;background:#fff7c2;font-size:20px;font-weight:800}.qty button:hover{background:var(--y)}
+
 .drawer{position:fixed;inset:0;background:#0006;z-index:30;display:none}.drawer.on{display:block}
 .panel{position:absolute;right:0;top:0;bottom:0;width:min(440px,100%);background:#fff;overflow:auto;padding:16px}
 .panel h3{margin:0 0 10px}.line{display:flex;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}.line .n{flex:1;font-size:14px}
@@ -39,7 +39,7 @@ select{padding:6px;border-radius:6px}
 .photo small{position:absolute;bottom:8px;left:8px;background:#fffc;padding:3px 7px;border-radius:5px;font-size:10px;color:#5b554a;backdrop-filter:blur(3px)}
 .image-note{font-size:12px!important;line-height:1.5;margin-top:10px!important;max-width:760px}
 .card{box-shadow:0 2px 8px #45340005}.grid{gap:16px}.hero{padding-top:26px}.hero h1{font-size:28px;letter-spacing:-.7px}
-@media(max-width:600px){.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.card{padding:10px;gap:7px}.photo{margin:-10px -10px 0}.nm{font-size:13px;min-height:36px}.tag{font-size:10px}.row{flex-wrap:wrap}.add{min-width:100%;padding:8px}.qty{width:100%;justify-content:space-between}.hero h1{font-size:23px}.bar{gap:7px}.search{order:5;flex-basis:100%}.logo img{height:45px}.btn{padding:9px 11px;font-size:13px}}
+@media(max-width:600px){.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.card{padding:10px;gap:7px}.photo{margin:-10px -10px 0}.nm{font-size:13px;min-height:36px}.tag{font-size:10px}.qty{width:100%}.hero h1{font-size:23px}.bar{gap:7px}.search{order:5;flex-basis:100%}.logo img{height:45px}.btn{padding:9px 11px;font-size:13px}}
 </style></head><body>
 <header><div class="bar">
  <div class="logo"><img id="logoimg" alt="360 Super Food - aarogyam dhan sampada"></div>
@@ -63,7 +63,7 @@ document.getElementById('logoimg').src=window.SF_LOGO;
 const C=window.SF_CONFIG, CATS=window.SF_CATEGORIES;
 const $=s=>document.querySelector(s);
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let cart=JSON.parse(localStorage.getItem('sf_cart')||'{}'), token=null, user=null, isAdmin=false, filter='all', draft={}, grid={};
+let cart=JSON.parse(localStorage.getItem('sf_cart')||'{}'), token=null, user=null, isAdmin=false, filter='all';
 $('#care').textContent=C.careNumber;$('#care').href='tel:'+C.careNumber;
 function saveCart(){localStorage.setItem('sf_cart',JSON.stringify(cart));$('#cnt').textContent=Object.values(cart).reduce((a,b)=>a+b,0)}
 function render(){
@@ -73,16 +73,14 @@ function render(){
   CATS.forEach(c=>{ if(filter!=='all'&&filter!==c.id)return;
     const its=c.items.filter(i=>!q||(i+' '+c.name).toLowerCase().includes(q)); if(!its.length)return;
     h+=`<h2 class="cat">${esc(c.name)}</h2><div class="grid">`+its.map(i=>{const k=i, photo=(window.SF_PRODUCT_IMAGES||{})[i], src=photo&&(window.SF_IMAGES||{})[photo.key];return `<div class="card">${src?`<div class="photo"><img loading="lazy" decoding="async" width="448" height="448" src="${src}" alt="${esc(i)} - ${esc(photo.label.toLowerCase())}"><small>${esc(photo.label)}</small></div>`:`<div class="ph">${esc(i.split(' ').map(w=>w[0]).slice(0,2).join(''))}</div>`}<div class="nm">${esc(i)}</div><div class="tag">${esc(c.name)}</div>
-     <div class="row"><div class="qty"><button data-m="${esc(k)}">-</button><span data-q="${esc(k)}">${draft[k]||1}</span><button data-p="${esc(k)}">+</button></div><button class="add" data-a="${esc(k)}">${cart[k]?'Add more':'Add to cart'}</button></div></div>`}).join('')+'</div>';});
+     <div class="row"><div class="qty ${cart[k]?'':'empty'}">${cart[k]?`<button type="button" aria-label="Decrease ${esc(k)} quantity" data-m="${esc(k)}">−</button><span aria-live="polite">${cart[k]}</span><button type="button" aria-label="Increase ${esc(k)} quantity" data-p="${esc(k)}">+</button>`:`<button type="button" aria-label="Add ${esc(k)} to cart" data-p="${esc(k)}">+</button>`}</div></div></div>`}).join('')+'</div>';});
   $('#main').innerHTML=h||'<p>No products match your search.</p>';
 }
 document.addEventListener('click',e=>{const t=e.target;
   if(t.dataset.c){filter=t.dataset.c;render()}
-  if(t.dataset.p){draft[t.dataset.p]=Math.min(99,(draft[t.dataset.p]||1)+1);render_q(t.dataset.p)}
-  if(t.dataset.m){draft[t.dataset.m]=Math.max(1,(draft[t.dataset.m]||1)-1);render_q(t.dataset.m)}
-  if(t.dataset.a){const k=t.dataset.a;cart[k]=(cart[k]||0)+(draft[k]||1);draft[k]=1;saveCart();render();t.textContent='Added'}
+  if(t.dataset.p){const k=t.dataset.p;cart[k]=Math.min(99,(cart[k]||0)+1);saveCart();render()}
+  if(t.dataset.m){const k=t.dataset.m;cart[k]=Math.max(0,(cart[k]||0)-1);if(!cart[k])delete cart[k];saveCart();render()}
 });
-function render_q(k){document.querySelectorAll('[data-q]').forEach(s=>{if(s.dataset.q===k)s.textContent=draft[k]})}
 $('#q').addEventListener('input',render);
 function open_(h){$('#panel').innerHTML=h;$('#drawer').classList.add('on')}
 function close_(){$('#drawer').classList.remove('on')}
